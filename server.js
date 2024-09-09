@@ -16,7 +16,7 @@ app.use(express.json());
 
 // Conexión a la base de datos MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/crm", {
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
