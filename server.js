@@ -6,7 +6,12 @@ const Product = require("./models/product");
 const productsRouter = require("./routes/products");
 
 const app = express();
-const PORT =
+
+// Puerto del servidor
+const PORT = process.env.PORT || 3000;
+
+// URI de conexión a MongoDB
+const MONGODB_URI =
   process.env.MONGODB_URI ||
   "mongodb+srv://vitabarmartin:Ty31LxBWtXtgcNlY@crm.x0gys.mongodb.net/?retryWrites=true&w=majority&appName=crm";
 
@@ -16,7 +21,7 @@ app.use(express.json());
 
 // Conexión a la base de datos MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI, {
+  .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -37,6 +42,8 @@ app.get("/api/products", (req, res) => {
     .then((products) => res.json(products))
     .catch((err) => res.status(400).json("Error: " + err));
 });
+
+// Ruta para agregar un nuevo producto (POST /api/products)
 app.post("/api/products", (req, res) => {
   const newProduct = new Product({
     name: req.body.name,
@@ -55,6 +62,7 @@ app.post("/api/products", (req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+// Ruta para eliminar un producto (DELETE /api/products/:id)
 app.delete("/api/products/:id", (req, res) => {
   Product.findByIdAndDelete(req.params.id)
     .then((deletedProduct) => {
@@ -66,7 +74,9 @@ app.delete("/api/products/:id", (req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+// Usar el router para las rutas de productos
 app.use("/api/products", productsRouter);
+
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
