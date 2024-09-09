@@ -6,7 +6,9 @@ const Product = require("./models/product");
 const productsRouter = require("./routes/products");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT =
+  process.env.MONGODB_URI ||
+  "mongodb+srv://vitabarmartin:Ty31LxBWtXtgcNlY@crm.x0gys.mongodb.net/?retryWrites=true&w=majority&appName=crm";
 
 // Middleware
 app.use(cors());
