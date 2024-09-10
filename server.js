@@ -1,9 +1,9 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const multer = require("multer");
-const Product = require("./models/product");
-const productsRouter = require("./routes/products");
+import express, { json } from "express";
+import { connect, Schema } from "mongoose";
+import cors from "cors";
+import multer from "multer";
+import Product, { find, findByIdAndDelete } from "./models/product";
+import productsRouter from "./routes/products";
 
 const app = express();
 
@@ -17,19 +17,18 @@ const MONGODB_URI =
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
 // Conexión a la base de datos MongoDB
-mongoose
-  .connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
 // Modelo de Producto
-const productSchema = new mongoose.Schema({
+const productSchema = new Schema({
   name: String,
   description: String,
   price: Number,
@@ -38,7 +37,7 @@ const productSchema = new mongoose.Schema({
 
 // Ruta para obtener todos los productos (GET /api/products)
 app.get("/api/products", (req, res) => {
-  Product.find()
+  find()
     .then((products) => res.json(products))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -64,7 +63,7 @@ app.post("/api/products", (req, res) => {
 
 // Ruta para eliminar un producto (DELETE /api/products/:id)
 app.delete("/api/products/:id", (req, res) => {
-  Product.findByIdAndDelete(req.params.id)
+  findByIdAndDelete(req.params.id)
     .then((deletedProduct) => {
       if (!deletedProduct) {
         return res.status(404).json("Product not found");

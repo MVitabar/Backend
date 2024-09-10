@@ -1,10 +1,15 @@
-const express = require("express");
-const router = express.Router();
-const Product = require("../models/product"); // Asegúrate de que la ruta sea correcta
+import { Router } from "express";
+const router = Router();
+import Product, {
+  find,
+  findById,
+  findByIdAndUpdate,
+  findByIdAndDelete,
+} from "../models/product"; // Asegúrate de que la ruta sea correcta
 
 // Ruta para obtener todos los productos (GET /api/products)
 router.get("/", (req, res) => {
-  Product.find()
+  find()
     .then((products) => res.json(products))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -30,7 +35,7 @@ router.post("/", (req, res) => {
 
 // Ruta para obtener un producto por ID (GET /api/products/:id)
 router.get("/:id", (req, res) => {
-  Product.findById(req.params.id)
+  findById(req.params.id)
     .then((product) => {
       if (!product) {
         return res.status(404).json("Product not found");
@@ -42,7 +47,7 @@ router.get("/:id", (req, res) => {
 
 // Ruta para actualizar un producto por ID (PUT /api/products/:id)
 router.put("/:id", (req, res) => {
-  Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((updatedProduct) => {
       if (!updatedProduct) {
         return res.status(404).json("Product not found");
@@ -54,7 +59,7 @@ router.put("/:id", (req, res) => {
 
 // Ruta para eliminar un producto por ID (DELETE /api/products/:id)
 router.delete("/:id", (req, res) => {
-  Product.findByIdAndDelete(req.params.id)
+  findByIdAndDelete(req.params.id)
     .then((deletedProduct) => {
       if (!deletedProduct) {
         return res.status(404).json("Product not found");
@@ -64,4 +69,4 @@ router.delete("/:id", (req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-module.exports = router;
+export default router;
